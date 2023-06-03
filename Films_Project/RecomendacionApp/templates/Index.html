@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/app.css">
+    <title>C.A.R</title>
+</head>
+
+<body>
+    <header class="header">
+        <h1 class="header__h1">C.A.R</h1>
+        <img src="film-solid.svg" alt="logo-app" class="header__imagen">
+    </header>
+    <main>
+        <div class="buscador">
+            <form method="post" action="">
+                {% csrf_token %}
+                <label class="buscador__label" for="buscador">Buscar en C.A.R</label>
+                <input type="text" name="movieName" id="movieName" class="buscador__texto"
+                    maxlength="32" placeholder="Toy Story, El señor de los Anillos, Star Wars, Matilda">
+                <input type="submit" value="Buscar" class="buscador__boton">
+            </form>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+            <script>
+                $(function () {
+                    $("#buscar").autocomplete({
+                        source: function (request, response) {
+                            $.ajax({
+                                url: "/autocompletado",
+                                dataType: "json",
+                                data: {
+                                    q: request.term
+                                },
+                                success: function (data) {
+                                    // limita los resultados
+                                    var maxResults = 10;
+                                    var limitData = data.slice(0, maxResults);
+                                    response(limitData);
+                                }
+                            });
+                        },
+                        minLength: 1 // Número mínimo de caracteres para activar el autocompletado
+                    });
+                });
+            </script>
+        </div>
+
+        <div class="resultado">
+            <div class="resultado__principal">
+                <h3 class="resultado__titulo">{{ titulo }}</h3>
+                <img src="{{ poster }}" alt="poster" class="resultado__img">
+            </div>
+            <div class="resultado__secundario">
+                <h3 class="resultado__nota">{{ rating }}</h3>
+                <p class="resultado__generos">{{ generos }}</p>
+            </div>
+        </div>
+
+
+        <div class="recomendaciones">
+            <h6>recomenda1</h6>
+            <h6>recomenda1</h6>
+            <h6>recomenda1</h6>
+            <h6>recomenda1</h6>
+            <h6>recomenda1</h6>
+            <h6>recomenda1</h6>
+        </div>
+
+
+
+
+    </main>
+
+    <footer class="footer">
+        <p class="footer__p">©copyright 2023</p>
+        <div class="footer__div--social">
+            <img src="twitter.svg" alt="twiter" class="footer__img" id="twitter">
+            <img src="instagram.svg" alt="instagram" class="footer__img" id="instagram">
+            <img src="facebook.svg" alt="facebook" class="footer__img" id="facebook">
+            <img src="google.svg" alt="google" class="footer__img" id="google">
+        </div>
+    </footer>
+</body>
+
+</html>

@@ -1,57 +1,52 @@
-import requests
+import pyodbc
+import os
 from dotenv import load_dotenv
 load_dotenv()
-import os
-import pandas as pd
-import numpy as np
+import requests
+from typing import NamedTuple
 
 
 
+def get_rating(id: str):
+    ApiKey = os.getenv('IMDB_KEY')
+    #ApiKey = 'k_r6c0kpae'
+    id = id.zfill(7)
+    api_url = f"https://imdb-api.com/API/Ratings/{ApiKey}/tt{id}"
+    response = requests.get(api_url)
 
-
-"""movie_title= 'Andrew Dice Clay: Dice Rules (1991)'
-match = df_Movies.loc[df_Movies['title'] == movie_title, 'ImdbRating']
-
-if np.isnan(match.values[0]):
-
-    match = 0.0  # Replace NaN with 0.0 or any other desired value
-
-else:
-    print('False')"""
-
-
-def getRating(id: str):
-    """
-    Funcion que devuelve el rating de una pelicula
-    :param id str: id de la pelicula de la que mostrar el rating
-    :return: rating otorgado por imdb
-    """
-    result = None
-
-    df_Movies = pd.read_excel(r'C:\Users\ccues\PycharmProjects\HackatonFixed\files\datasetMoviesExcel.xls')
-    print(df_Movies.columns)
-    print(df_Movies['imdbId'])
-    print(df_Movies.info())
-
-    match = df_Movies.loc[df_Movies['imdbId'] == id, 'ImdbRating']
-    print('AA',match)
-    if np.isnan(match.values[0]):
-
-        ApiKey = os.getenv('IMDB_KEY')
-        api_url = f"https://imdb-api.com/API/Ratings/{ApiKey}/tt{id}"
-        response = requests.get(api_url)
-
-        if response.status_code == 200:
-            rating = response.json()
-            imdbRating = rating['imDb'] if rating else "No hay Rating"
-            df_Movies.loc[df_Movies['imdbId'] == id, 'ImdbRating'] = imdbRating
-
-        df_Movies.to_excel('updated_datasetMoviesExcel.xls', index=False)
-        print(imdbRating)
+    if response.status_code == 200:
+        imdbRating = float(response.json()['imDb'])
         return imdbRating
 
     else:
-        print('False')
+        return 'No hay rating'
+
+
+
+def getPoster(id: str):
+
+    """Funcion que devuelve el Poster de una pelicula
+    :param id str:  id de la pelicula de la que mostrar el poster
+    :return: link  a de la imagen"""
+  
+    #ApiKey = 'k_r6c0kpae'
+
+    ApiKey = os.getenv('IMDB_KEY')
+    id = id.zfill(7)
+    api_url = f"https://imdb-api.com/en/API/Posters/{ApiKey}/tt{id}"
+
+    response = requests.get(api_url)
+    if response.status_code == 200:
+
+        if len(response.json()['posters']) > 0:
+            poster = response.json()['posters'][0]['link']
+
+            return poster
+
+        else:
+            result = 'No hay poster disponible'
+
+            return result
 
 
 
@@ -60,5 +55,85 @@ def getRating(id: str):
 
 
 
-getRating('101726.0')
+class dataReturn():
 
+    def __init__(self):
+        self.rating = 0
+        self.genre = None
+        self.poster = ""
+        self.title = ''
+        self.cursor = None
+        self.connect_to_database()
+
+
+    def connect_to_database(self):
+        try:
+            self.conection = pyodbc.connect("CONNECTION_STRING")
+            self.cursor = self.conection.cursor()
+        except pyodbc.Error as e:
+            print(f"Database connection error: {e}")
+
+
+
+    def consultaFilms(self, title: str):
+        self.title=title
+        cursor = self.cursor
+
+        consultaSelect = ('SELECT genres, ImdbRating, PosterURL, imdbId FROM Films where title = ?')
+        self.cursor.execute(consultaSelect,(self.title,))
+        row = cursor.fetchone()
+
+        imdbId = str(row[3])
+        self.genre = row[0].split('|')
+        self.rating = float(row[1].replace(',', '.')) if row[1] else get_rating(imdbId)
+        self.poster = row[2] if row[2] != None else  getPoster(imdbId)
+
+        result = [self.genre, self.rating, self.poster]
+
+        return result
+
+    def insertBBDD(self):
+
+        cursor = self.cursor
+
+
+        consultaUpd = 'update Films set ImdbRating=? , PosterURL = ? where title = ?'
+        cursor.execute(consultaUpd,(self.rating, self.poster,self.title))
+        self.conection.commit()
+
+
+
+
+title = 'Nixon (1995)'
+
+data = dataReturn()
+retorno = data.consultaFilms(title)
+bbdd = data.insertBBDD()
+print(retorno)
+print(bbdd)
+
+
+
+"""
+
+conn = pyodbc.connect('Driver={SQL Server};''Server=.;''Database=Films;''Trusted_Connection=yes;')
+cursor = conn.cursor()
+title = 'GoldenEye (1995)'
+consulta  = ('SELECT genres, ImdbRating, PosterURL, imdbId FROM Films where title = ?')
+print(consulta)
+cursor.execute(consulta,(title,))
+row = cursor.fetchone()
+print(row)
+imdbId = str(row[3])
+
+genre = row[0].split('|')
+rating = float(row[1].replace(',', '.')) if row[1] else get_rating(imdbId)
+poster = row[2] if row[2] != None else  getPoster(imdbId)
+
+print(genre, rating, poster)
+
+
+
+consulta = ('update Films set ImdbRating=? , PosterURL = ? where title = ?')
+cursor.execute(consulta,(rating,poster,title))
+conn.commit()"""

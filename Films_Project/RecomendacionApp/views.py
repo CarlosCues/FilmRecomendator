@@ -1,27 +1,24 @@
-from django.http import HttpResponse
-from django.shortcuts import render
-from RecomendacionApp.models   import MovieData
 
+from django.shortcuts import render
+from RecomendacionApp.models import dataReturn
 
 
 def index(request):
-    dataFilm = MovieData()
+    dataFilm = dataReturn()
+
     if request.method == 'POST':
         movieName = request.POST.get('movieName')
 
-        idMovie = dataFilm.get_imdb_id(movieName)
-        genero = dataFilm.return_genre(movieName)
-        poster = dataFilm.getPoster(idMovie)
-        rating = dataFilm.getRating(idMovie)
-
-        datos = [
-            poster, rating, genero
-        ]
+        datos = dataFilm.consultaFilms(movieName)
 
         contexto = {
             "lista_datos": datos
         }
+        dataFilm.updateBBDD()
+        dataFilm.closeConnection()
         print(contexto)
         return render(request, "Index.html", contexto)
 
+    dataFilm.updateBBDD()
+    dataFilm.closeConnection()
     return render(request, 'Index.html')

@@ -1,6 +1,6 @@
-Film Recomendator
+##Film Recomendator
 
-## 💥💥 Desarrollo de una pagina web de recomendación de películas en arquitectura MTV bajo el framework Django.
+### 💥💥 Desarrollo de una pagina web de recomendación de películas en arquitectura MTV bajo el framework Django.
 
 Una vez el usuario introduce el nombre de una pélicula se devuelve informacion sobre el rating dde Imdb, el poster de la película y género categorizado por Imdb. 
 Ademas en base al rating y a la categoría de la  pelécula se hace una recomendacion de películas similares, si el usaurio hace click en alguna recomendación, 
@@ -19,12 +19,15 @@ Al seleccionar una película en el buscador se hace una búsqueda a la BBDD. Si 
   Desarrollo de la capa de datos.
   Desarrollo de la lógica de negócio.
 
-## Next Steps
+## Next Steps: 
+
+-- Mejora del sistema de recomendacion 
+-- Incluir resumen de la pélicula generado con ChatGpt.
 
 
 Proyecto desarrollado integramente en Python
 
-Participantes del proyecto:
+## Participantes del proyecto:
 [Alejandro HM](https://github.com/Usrg30) 
 
 

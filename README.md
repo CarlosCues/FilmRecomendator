@@ -13,16 +13,17 @@ Al seleccionar una película en el buscador se hace una búsqueda a la BBDD. Si 
 
 ## Fases del proyecto han sido(a falta de templates):
 
-  Creacion de una BBDD en SQL Server.
-  Conexxion con SQL Server.
-  Conexion a la Api de Imdb.
-  Desarrollo de la capa de datos.
-  Desarrollo de la lógica de negócio.
+- Creación de una BBDD en SQL Server.
+- Conexión con SQL Server.
+- Conexión a la API de Imdb.
+- Desarrollo de la capa de datos.
+- Desarrollo de la lógica de negocio.
+
 
 ## Next Steps: 
 
--- Mejora del sistema de recomendacion 
--- Incluir resumen de la pélicula generado con ChatGpt.
+--Mejora del sistema de recomendacion 
+- Incluir resumen de la pélicula generado con ChatGpt.
 
 
 Proyecto desarrollado integramente en Python

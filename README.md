@@ -16,7 +16,7 @@ Al seleccionar una película en el buscador se hace una búsqueda a la BBDD. Si 
 - Creación de una BBDD en SQL Server.
 - Conexión con SQL Server.
 - Conexión a la API de Imdb.
-- Desarrollo de la capa de datos.
+- Extraccion de datos.
 - Desarrollo de la lógica de negocio.
 
 

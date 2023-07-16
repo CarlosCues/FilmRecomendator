@@ -26,7 +26,8 @@ Al seleccionar una película en el buscador se hace una búsqueda a la BBDD. Si 
 - Incluir resumen de la pélicula generado con ChatGpt.
 
 
-## Participantes del proyecto:
+## Otros responsables del proyecto:
+
 [Alejandro HM](https://github.com/Usrg30) 
 
 

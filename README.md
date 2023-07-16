@@ -22,14 +22,13 @@ Al seleccionar una película en el buscador se hace una búsqueda a la BBDD. Si 
 
 ## Next Steps: 
 
---Mejora del sistema de recomendacion 
+- Inclusion de nuevas variables en la recomendacion.
 - Incluir resumen de la pélicula generado con ChatGpt.
 
 
-Proyecto desarrollado integramente en Python
-
 ## Participantes del proyecto:
 [Alejandro HM](https://github.com/Usrg30) 
+
 
 
 
